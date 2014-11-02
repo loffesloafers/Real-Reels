@@ -1,39 +1,46 @@
 var moviesLoaded = false
 var movies;
 var goodMovies = [];
+var local = false
 
 $(document).ready(function(){
 	console.log('document ready')
-	$.ajax({
-	  dataType: "json",
-	  url: "getmovies.php",
-	  data: {},
-	  success: function(data){
-	  	console.log('loadedMovies');
-	  	movies = data;
-	  	console.log(data);
-	  	sortMovies();
-	  	$('#while-loading').hide();
-	  	$('#finished-loading').show();
-	  },
-	  error: function(error){
-	  	console.log('error',error);
-	  }
-	});
-	$(".movie-button").click(function () {
-		/*
-		do {
-		    var randomFilm = Math.floor(Math.random() * movies.length);
-		} while (movies[randomFilm].rating < 3)
-		*/
 
-		var currentMovieIndex = Math.floor(Math.random()* goodMovies.length)
-		var currentMovie = goodMovies[currentMovieIndex];
-		presentMovieData(currentMovie);
-	    //appending movie title to container div
-		$(".movies-container").html($("<div class='movie-container'></div>").append(movies[randomFilm].title));
-		$(".year-container").html($("<div class='year-container'></div>").append(movies[randomFilm].year));
-		$(".rating-container").html($("<div class='rating-container'></div>").append(movies[randomFilm].rating));
+	if(local){
+		movies = window.allMovies;
+		console.log(movies);
+		sortMovies();
+		$('#while-loading').hide();
+	  	$('#finished-loading').show()
+	  	moviesLoaded = true;
+	  	showRandomMovie();
+	}
+	else{
+		$.ajax({
+		  dataType: "json",
+		  url: "getmovies.php",
+		  data: {},
+		  success: function(data){
+		  	console.log('loadedMovies');
+		  	movies = data;
+		  	console.log(data);
+		  	sortMovies();
+		  	$('#while-loading').hide();
+		  	$('#finished-loading').show()
+		  	moviesLoaded = true;
+		  	showRandomMovie();
+		  },
+		  error: function(error){
+		  	console.log('error',error);
+		  	$('#while-loading').append('something went wrong, please reload the page');
+		  }
+		});
+	}
+
+
+	$(".movie-button").click(function () {
+		$('#imdb-data').empty();
+		showRandomMovie();
 	});
 });
 
@@ -45,9 +52,52 @@ function sortMovies(){
 	}
 }
 
+function showRandomMovie(){
+	$('#imdb-data').append('')
+	var currentMovieIndex = Math.floor(Math.random()* goodMovies.length)
+	var currentMovie = goodMovies[currentMovieIndex];
+	loadImdbData(currentMovie);
+}
+
+function loadImdbData(currentMovie){
+	$.ajax({
+		dataType: "json",
+		url: "http://www.imdbapi.com/?i=tt" + currentMovie.imdbid,
+		success: function(data){
+			console.log(data);
+			if( Number(data.imdbRating) > 7 ){
+				presentMovieData(currentMovie)
+				showImdbData(data)
+			}
+			else {
+				showRandomMovie()
+			}
+		},
+		error: function(){
+			showRandomMovie();
+		}
+	});
+}
+
+function showImdbData(data){
+	// $('#imdb-data').append(data.title)
+	$('#movie-data').append('<p><img src="' + data['Poster'] +'" width="300px"></p>')
+	for (var key in data) {
+		if(key == 'Type' || key == 'Response'){
+
+		}
+		else {
+			$('#movie-data').append('<p id=imdb' + key  +'><b>' + key + ':</b> ' + data[key]);
+		}
+	}
+
+	var imdbLink = "http://www.imdb.com/title/" + data['imdbID'] + "/?ref_=nv_sr_1"
+	$('#movie-data').append('<a href="' + imdbLink +'">' + imdbLink + '</a>');
+}
+
 function presentMovieData(currentMovie){
-	$('#movies-container').append(currentMovie.title)
-	$('#year-container').append(currentMovie.year)
-	$('#rating-container').append(currentMovie.rating)
+	$('#movie-data').append(currentMovie.title)
+	$('#movie-data').append(currentMovie.year)
+	$('#movie-data').append(currentMovie.rating)
 }
 
