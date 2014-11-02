@@ -84,9 +84,20 @@
 }
 
 
+#finished-loading {
+	display: none
+}
+
+#while-loading {
+	font-size: 2em;
+}
+
 
 body {
+	font-family: sans-serif;
+	color: white;
 	background-color: #2f2f2f;
+	text-align: center;
 }
 
 
