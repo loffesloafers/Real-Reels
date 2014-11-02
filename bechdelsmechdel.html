@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/taffydb/2.7.2/taffy-min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <title>k</title>
+        <link rel="stylesheet" type="text/css" href="styles.css"/> 
+    </head>
+    
+    
+    <body>
+    
+    <div id="jumbotron">
+        <h1>Real-Reels</h1>
+        <p>Generating high quality movies for a clarity of mind.</p>
+      </div>
+    
+    
+    <div id="Question">
+    <h2>Would you like to watch...</h2>
+    </div>
+
+    
+    <div class="movies-container"></div>
+    <div class="year-container"></div>
+    <div class="rating-container"></div>
+    
+    <div id="answer">
+    <p>?</p>
+    </div>
+    
+    
+    
+    <p align="center">
+    <button class="movie-button"style="margin-left:auto;margin-right:auto">Please magically generate something else!
+    </button>
+    </p>
+      
+      <script>
+var movies;
+$.getJSON("http://bechdeltest.com/api/v1/getMoviesByTitle?title", function (data) {
+			movies = data;
+});
+
+$(".movie-button").click(function () {
+	do {
+	    var randomFilm = Math.floor(Math.random() * movies.length);
+	} while (movies[randomFilm].rating != 3)
+
+    //appending movie title to container div
+    	$(".movies-container").html($("<div class='movie-container'></							div>").append(movies[randomFilm].title));
+    	$(".year-container").html($("<div class='year-container'></							div>").append(movies[randomFilm].year));
+    	$(".rating-container").html($("<div class='rating-container'></							div>").append(movies[randomFilm].rating));
+});
+
+		   	 
+	</script>
+  </body>       
+</html>
+
