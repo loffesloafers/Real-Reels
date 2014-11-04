@@ -101,4 +101,80 @@ body {
 }
 
 
+/**** IMDB DATA ****/
 
+#movie-data {
+  width: 100%;
+  padding: 2em;
+  max-width: 1080px;
+  background-color: blue;
+}
+
+#movie-poster {
+  float: left;
+  width: 300px;
+}
+
+#movie-info {
+}
+
+.imdb {
+  color: red;
+  background-color: white
+}
+
+#imdbTitle {
+  color: green;
+}
+
+#imdbYear {
+  color: blue;
+}
+
+#imdbRuntime {
+
+}
+
+#imdbGenre {
+
+}
+
+#imdbDirector {
+
+}
+
+#imdbActors {
+
+}
+
+#imdbPlot {
+
+}
+
+#imdbLanguage {
+
+}
+
+#imdbCountry {
+
+}
+
+#imdbimdbRating {
+  font-size: 30px;
+  color: #fc9a23;
+}
+
+#imdbVotes {
+
+}
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.clearfix {
+  clear:both;
+}

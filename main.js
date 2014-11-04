@@ -1,7 +1,7 @@
 var moviesLoaded = false
 var movies;
 var goodMovies = [];
-var local = false
+var local = true
 
 $(document).ready(function(){
 	console.log('document ready')
@@ -39,6 +39,7 @@ $(document).ready(function(){
 
 
 	$(".movie-button").click(function () {
+		$(".movie-button").hide();
 		$('#imdb-data').empty();
 		showRandomMovie();
 	});
@@ -66,8 +67,7 @@ function loadImdbData(currentMovie){
 		success: function(data){
 			console.log(data);
 			if( Number(data.imdbRating) > 7 ){
-				presentMovieData(currentMovie)
-				showImdbData(data)
+				showImdbData(data,currentMovie)
 			}
 			else {
 				showRandomMovie()
@@ -79,25 +79,20 @@ function loadImdbData(currentMovie){
 	});
 }
 
-function showImdbData(data){
+function showImdbData(data,beshdelData){
 	// $('#imdb-data').append(data.title)
-	$('#movie-data').append('<p><img src="' + data['Poster'] +'" width="300px"></p>')
-	for (var key in data) {
-		if(key == 'Type' || key == 'Response'){
+	$('#movie-poster').empty().append('<img src="' + data['Poster'] +'" width="300px">')
 
-		}
-		else {
-			$('#movie-data').append('<p id=imdb' + key  +'><b>' + key + ':</b> ' + data[key]);
-		}
+	var dataToShow = ["Title","Year", "Runtime", "Genre", "Director", "Actors","Plot","Language","Country","imdbRating","imdbVotes"];
+
+	for(var i = 0; i < dataToShow.length; i++){
+		var key = dataToShow[i];
+		$('#imdb' + key).empty().append('<b>' + key + ':</b> ' + data[key])
 	}
 
 	var imdbLink = "http://www.imdb.com/title/" + data['imdbID'] + "/?ref_=nv_sr_1"
-	$('#movie-data').append('<a href="' + imdbLink +'">' + imdbLink + '</a>');
-}
+	$('#imdbLink').empty().append('<a href="' + imdbLink +'" class="imdb-link">' + imdbLink + '</a>');
 
-function presentMovieData(currentMovie){
-	$('#movie-data').append(currentMovie.title)
-	$('#movie-data').append(currentMovie.year)
-	$('#movie-data').append(currentMovie.rating)
+	$(".movie-button").show();
 }
 
